@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Diario Ambiental - Ñuble, Biobío y Araucanía</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      background: #f4fdf7;
+      font-family: 'Roboto', sans-serif;
+      color: #222;
+      padding: 0;
+    }
+    header {
+      background-color: #2e7d32;
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    header p {
+      font-size: 1rem;
+      margin-top: 0.5rem;
+    }
+    #news-section {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .article {
+      background: #ffffff;
+      border-left: 5px solid #388e3c;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .article h2 {
+      margin-top: 0;
+      color: #2e7d32;
+    }
+    .article p {
+      margin: 0.5rem 0;
+    }
+    .article a {
+      color: #2e7d32;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .article a:hover {
+      text-decoration: underline;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #2e7d32;
+      color: white;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Diario Ambiental Regional 🌱</h1>
+    <p>Noticias de Ñuble, Biobío y La Araucanía</p>
+  </header>
+
+  <section id="news-section">
+    <!-- Noticias se cargarán aquí -->
+  </section>
+
+  <footer>
+    Diario Ambiental © 2025 - Información sobre medioambiente y cultura regional
+  </footer>
+
+  <script>
+    const SHEET_URL = "https://api.sheet.best/api/sheets/44a47387-4418-4382-a713-b2e42751b9c1"; // Reemplazar si usas otra hoja
+
+    async function fetchNoticias() {
+      try {
+        const res = await fetch(SHEET_URL);
+        const noticias = await res.json();
+        const filtradas = noticias.filter(n => 
+          ['Ñuble', 'Biobío', 'La Araucanía'].includes(n.region)
+        );
+        const ordenadas = filtradas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+        mostrarNoticias(ordenadas);
+      } catch (error) {
+        console.error("Error cargando noticias:", error);
+      }
+    }
+
+    function mostrarNoticias(noticias) {
+      const contenedor = document.getElementById("news-section");
+      contenedor.innerHTML = "";
+      noticias.forEach(noticia => {
+        const div = document.createElement("div");
+        div.className = "article";
+        div.innerHTML = `
+          <h2>${noticia.titulo}</h2>
+          <p>${noticia.descripcion}</p>
+          <p><strong>Región:</strong> ${noticia.region} | <strong>Categoría:</strong> ${noticia.categoria}</p>
+          <a href="${noticia.link}" target="_blank">Leer más</a>
+        `;
+        contenedor.appendChild(div);
+      });
+    }
+
+    fetchNoticias();
+    setInterval(fetchNoticias, 60000);
+  </script>
+</body>
+</html>
