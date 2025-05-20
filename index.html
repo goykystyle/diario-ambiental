@@ -1,118 +1,116 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Diario Ambiental - Ñuble, Biobío y Araucanía</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      background: #f4fdf7;
-      font-family: 'Roboto', sans-serif;
-      color: #222;
-      padding: 0;
+      background: #1a1a1a;
+      font-family: 'Orbitron', sans-serif;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
     }
     header {
-      background-color: #2e7d32;
-      color: white;
+      font-size: 2.2rem;
+      color: #00ffe0;
+      margin-bottom: 1rem;
       text-align: center;
-      padding: 2rem 1rem 1rem;
     }
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-    header p {
-      font-size: 1rem;
-      margin-top: 0.5rem;
-    }
-    #news-section {
+    section {
+      width: 100%;
       max-width: 900px;
-      margin: 2rem auto;
-      padding: 0 1rem;
     }
     .article {
-      background: #ffffff;
-      border-left: 5px solid #388e3c;
+      background-color: #2c2c2c;
+      border-left: 5px solid #00ffe0;
       padding: 1rem;
       margin-bottom: 1.5rem;
-      border-radius: 5px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      border-radius: 8px;
     }
     .article h2 {
-      margin-top: 0;
-      color: #2e7d32;
+      margin: 0 0 0.5rem;
+      color: #00ffe0;
     }
     .article p {
       margin: 0.5rem 0;
     }
     .article a {
-      color: #2e7d32;
+      color: #00ffe0;
       text-decoration: none;
-      font-weight: bold;
     }
     .article a:hover {
       text-decoration: underline;
     }
     footer {
-      text-align: center;
-      padding: 1rem;
-      background: #2e7d32;
-      color: white;
+      margin-top: 3rem;
       font-size: 0.9rem;
+      text-align: center;
+    }
+    .instagram-link {
+      display: inline-block;
+      margin-top: 1rem;
+      color: #00ffe0;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+    .instagram-link:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Diario Ambiental Regional 🌱</h1>
-    <p>Noticias de Ñuble, Biobío y La Araucanía</p>
+    Diario Ambiental Regional 🌿
+    <div style="font-size: 1rem; color: #ccc;">Ñuble, Biobío y La Araucanía</div>
   </header>
 
   <section id="news-section">
-    <!-- Noticias se cargarán aquí -->
+    <!-- Noticias se cargarán dinámicamente aquí -->
   </section>
 
   <footer>
-    Diario Ambiental © 2025 - Información sobre medioambiente y cultura regional
+    Diario Ambiental Regional © 2025 - Proyecto informativo sobre medioambiente y cultura en el sur de Chile.<br>
+    <a class="instagram-link" href="https://www.instagram.com/goykystyle" target="_blank">Visita el Instagram de GoykyStyle</a>
   </footer>
 
   <script>
-    const SHEET_URL = "http://api.sheetbest.com/sheets/64aa5cff-d3aa-4bc2-8b9d-83c6e095314e"; // Reemplazar si usas otra hoja
+    const SHEET_URL = "https://api.sheetbest.com/sheets/64aa5cff-d3aa-4bc2-8b9d-83c6e095314e"; 
 
     async function fetchNoticias() {
       try {
-        const res = await fetch(SHEET_URL);
-        const noticias = await res.json();
-        const filtradas = noticias.filter(n => 
-          ['Ñuble', 'Biobío', 'La Araucanía'].includes(n.region)
-        );
-        const ordenadas = filtradas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
-        mostrarNoticias(ordenadas);
+        const response = await fetch(SHEET_URL);
+        const data = await response.json();
+
+        const noticiasOrdenadas = data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+        renderNoticias(noticiasOrdenadas);
       } catch (error) {
         console.error("Error cargando noticias:", error);
       }
     }
 
-    function mostrarNoticias(noticias) {
-      const contenedor = document.getElementById("news-section");
-      contenedor.innerHTML = "";
+    function renderNoticias(noticias) {
+      const container = document.getElementById("news-section");
+      container.innerHTML = "";
       noticias.forEach(noticia => {
-        const div = document.createElement("div");
-        div.className = "article";
-        div.innerHTML = `
+        const article = document.createElement("div");
+        article.className = "article";
+        article.innerHTML = `
           <h2>${noticia.titulo}</h2>
           <p>${noticia.descripcion}</p>
-          <p><strong>Región:</strong> ${noticia.region} | <strong>Categoría:</strong> ${noticia.categoria}</p>
           <a href="${noticia.link}" target="_blank">Leer más</a>
         `;
-        contenedor.appendChild(div);
+        container.appendChild(article);
       });
     }
 
     fetchNoticias();
-    setInterval(fetchNoticias, 60000);
+    setInterval(fetchNoticias, 60000); // Actualiza cada minuto
   </script>
 </body>
 </html>
