@@ -62,6 +62,11 @@
     .instagram-link:hover {
       text-decoration: underline;
     }
+    .update-label {
+      margin: 1rem;
+      color: #888;
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
@@ -70,6 +75,7 @@
     <div style="font-size: 1rem; color: #ccc;">Ñuble, Biobío y La Araucanía</div>
   </header>
 
+  <div id="update-label" class="update-label"></div>
   <section id="news-section">
     <!-- Noticias se cargarán dinámicamente aquí -->
   </section>
@@ -80,17 +86,20 @@
   </footer>
 
   <script>
-    const SHEET_URL = "https://api.sheetbest.com/sheets/64aa5cff-d3aa-4bc2-8b9d-83c6e095314e"; 
+    const SHEET_URL = "https://api.sheetbest.com/sheets/64aa5cff-d3aa-4bc2-8b9d-83c6e095314e";
+    const updateLabel = document.getElementById("update-label");
 
     async function fetchNoticias() {
       try {
-        const response = await fetch(SHEET_URL);
+        const response = await fetch(SHEET_URL + "?nocache=" + Date.now());
         const data = await response.json();
 
         const noticiasOrdenadas = data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
         renderNoticias(noticiasOrdenadas);
+        updateLabel.innerText = "Última actualización: " + new Date().toLocaleString("es-CL");
       } catch (error) {
         console.error("Error cargando noticias:", error);
+        updateLabel.innerText = "Error al actualizar noticias.";
       }
     }
 
